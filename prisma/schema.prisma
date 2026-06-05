@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String        @id @default(cuid())
+  email     String        @unique
+  password  String
+  nickname  String?
+  dietary   String        @default("{}")
+  createdAt DateTime      @default(now())
+  recipes   SavedRecipe[]
+}
+
+model SavedRecipe {
+  id      String   @id @default(cuid())
+  userId  String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe  String
+  tags    String   @default("[]")
+  memo    String   @default("")
+  savedAt DateTime @default(now())
+}
